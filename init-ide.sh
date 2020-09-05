@@ -1,1 +1,1 @@
-pio init --ide clion --environment gps_gadget
+pio init --ide clion --environment gpsgadget

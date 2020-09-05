@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ENV="gps_gadget"
+ENV="gpsgadget"
 TARGET="upload"
 
 #USB=`ls /dev/ttyUSB* | tr ' ' '\n' | sort  | head -1`

@@ -1,3 +1,9 @@
+.idea/
+.pio/
+CMakeListsPrivate.txt
+cmake-build-debug/
+cmake-build-gpsgadget/
+
 # Prerequisites
 *.d
 

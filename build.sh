@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pio run --environment gps_gadget --jobs 9
+pio run --environment gpsgadget --jobs 9
