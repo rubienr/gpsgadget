@@ -5,8 +5,7 @@
 
 // -------------------------------------------------------------------------------------------------
 
-template <uint16_t pin> class Pixel_t : public Adafruit_NeoPixel
-{
+template <uint16_t pin> class Pixel_t : public Adafruit_NeoPixel {
 public:
     Pixel_t();
     ~Pixel_t() = default;
@@ -19,8 +18,7 @@ public:
 
 // -------------------------------------------------------------------------------------------------
 
-template <uint16_t pin> void Pixel_t<pin>::setup()
-{
+template <uint16_t pin> void Pixel_t<pin>::setup() {
     updateType(NEO_GRB + NEO_KHZ400);
     updateLength(1);
     setPin(pin);
@@ -39,14 +37,12 @@ template <uint16_t pin> Pixel_t<pin>::Pixel_t() : Adafruit_NeoPixel(1, pin, NEO_
 
 // -------------------------------------------------------------------------------------------------
 
-template <uint16_t pin> void Pixel_t<pin>::setColor(uint8_t r, uint8_t g, uint8_t b)
-{
+template <uint16_t pin> void Pixel_t<pin>::setColor(uint8_t r, uint8_t g, uint8_t b) {
     Adafruit_NeoPixel::setPixelColor(0, r, g, b);
 }
 
 // -------------------------------------------------------------------------------------------------
 
-template <uint16_t pin> void Pixel_t<pin>::setColor(uint32_t c)
-{
+template <uint16_t pin> void Pixel_t<pin>::setColor(uint32_t c) {
     Adafruit_NeoPixel::setPixelColor(0, c);
 }

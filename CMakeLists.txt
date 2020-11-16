@@ -30,4 +30,4 @@ add_custom_target(
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(Z_DUMMY_TARGET ${SRC_LIST} src/Bn880qGps.cpp src/Bn880qGps.h)
+add_executable(Z_DUMMY_TARGET ${SRC_LIST} src/gps_types.cpp src/gps_types.h)

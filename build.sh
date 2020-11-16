@@ -1,3 +1,1 @@
-#!/bin/bash
-
-pio run --environment gpsgadget --jobs 9
+scripts/build.sh

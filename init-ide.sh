@@ -1,1 +1,1 @@
-pio init --ide clion --environment gpsgadget
+scripts/init-ide.sh
