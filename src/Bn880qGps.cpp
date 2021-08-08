@@ -116,6 +116,24 @@ Bn880qGps::Bn880qGps(Stream &serial) : m_serial(serial) {}
 // -------------------------------------------------------------------------------------------------
 
 void Bn880qGps::setup() {
+    /*
+    BN-880Q says:
+    GNTXT,01,01,02,u-blox AG - www.u-blox.com
+    GNTXT,01,01,02,HW UBX-M8030 00080000
+    GNTXT,01,01,02,ROM CORE 3.01 (107888)
+    GNTXT,01,01,02,FWVER=SPG 3.01
+    GNTXT,01,01,02,PROTVER=18.00
+    GNTXT,01,01,02,GPS;GLO;GAL;BDS
+    GNTXT,01,01,02,SBAS;IMES;QZSS
+    GNTXT,01,01,02,GNSS OTP=GPS;GLO
+    GNTXT,01,01,02,LLC=FFFFFFFF-FFFFFFFF-FFFFFFFF-FFFFFFFF-FFFFFFFD
+    GNTXT,01,01,02,ANTSUPERV=AC SD PDoS SR
+    GNTXT,01,01,02,ANTSTATUS=DONTKNOW
+    GNTXT,01,01,02,PF=3FF
+    GNTXT,01,01,02,ANTSTATUS=INIT
+    GNTXT,01,01,02,ANTSTATUS=OK
+    */
+
     // Clear the list of messages which are sent.
     // MicroNMEA::sendSentence(gps_serial, "$PORZB");
 
@@ -128,11 +146,26 @@ void Bn880qGps::setup() {
     // MicroNMEA::sendSentence(gps_serial, "$PNVGNME,2,9,1");
     // MicroNMEA::sendSentence(gps, "$PONME,2,4,1,0");
 
-    sendSentence("PSRF105,1"); // debug on
+    Serial.println("Bn880qGps::setup: restart module");
+    sendSentence("PSRF100,1,9600,8,1,0"); // restart, enable NMEA, set serial parameter
+    // PMTK314,1,1,1,1,1,5,1,1,1,1,1,1,0,1,1,1,1,1,1
+    // PMTK314,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0 PSRF100,1,9600,8,1,1  UBX-CFG-PRT
+    Serial.println("Bn880qGps::setup: debug on");
+    // sendSentence("PSRF105,1"); // debug on
+
+    Serial.println("Bn880qGps::setup: set WGS84 datum");
+    // sendSentence("PSRF106,21"); // set WGS84 datum
     // TODO II $GNTXT,01,01,01,PSRF inv format*35
 
-    sendSentence("PSRF106,21"); // set WGS84 datum
     // TODO II $GNTXT,01,01,01,PSRF inv format*35
+
+    Serial.println("Bn880qGps::setup: enable MSS");
+    sendSentence("PSRF103,06,00,01,01"); // MSS every 1 second
+
+    /// sendSentence("$psrf103,05,01,00,01"); // MSS every 1 second
+
+    Serial.println("Bn880qGps::setup: enable ZDA");
+    sendSentence("PSRF103,08,00,01,01"); // ZDA every 1 second
 }
 // -------------------------------------------------------------------------------------------------
 
@@ -145,7 +178,9 @@ bool Bn880qGps::process() {
             }
             if(parseSentence()) {
                 new_data_available = true;
-            }
+            } else {
+                Serial.printf("IE failed to handle '%s'\n", m_sentence_parser.getSentence());
+            };
         }
     }
     return new_data_available;
@@ -205,6 +240,10 @@ bool Bn880qGps::parseSentence() {
     else if(sentence_type == "GLGSA")
         return onGlgsa(sentence_fields, fields_count);
 
+    else if(sentence_type == "GNTXT")
+        return onGntxt(sentence_fields, fields_count);
+
+    // TODO ZDA, MSS
     else
         Serial.printf("IE %s\n", sentence.c_str());
 
@@ -228,6 +267,7 @@ bool Bn880qGps::onGpgsv(const String &sentence, uint8_t fields_count) {
             return onGXgsv(sentence, fields_count, data.gpgsv_3);
     }
 
+    Serial.println();
     return false;
 }
 
@@ -797,12 +837,35 @@ bool Bn880qGps::onGXgsa(const String &sentence, uint8_t fields_count, GXgsa &des
 
 // -------------------------------------------------------------------------------------------------
 
+bool Bn880qGps::onGntxt(const String &sentence, uint8_t /*fields_count*/) {
+    Serial.printf("IP GN TXT %s\n", sentence.c_str());
+    return true;
+}
+
+// -------------------------------------------------------------------------------------------------
+
 void Bn880qGps::sendSentence(const char *sentence) {
     if(sentence == nullptr || sentence[0] == 0)
         return;
+
+#define GPS_SERIAL_TRANSMIT_TO_GPS_LINE_END "\r\n"
+
+    if(sentence[0] == '!') {
+        m_serial.printf("%s" GPS_SERIAL_TRANSMIT_TO_GPS_LINE_END, sentence);
+    }
+
     uint8_t crc{ computeCrc(sentence) };
-    m_serial.printf("$%s*%02X\r\n", sentence, crc);
+
+    m_serial.printf("$%s*%02X" GPS_SERIAL_TRANSMIT_TO_GPS_LINE_END, sentence, crc);
+
+
+#if defined(GPS_SERIAL_TRANSMIT_TO_GPS_LINE_END)
+    m_serial.printf("$%s*%02X" GPS_SERIAL_TRANSMIT_TO_GPS_LINE_END, sentence, crc);
+#else
+    m_serial.printf("$%s*%02X", sentence, crc);
+#endif
+
 #if defined(DEBUG_GPS_COMMUNICATION)
-    Serial.printf("O $%s*%02X\r\n", sentence, crc);
+    Serial.printf("O  '$%s*%02X'\n", sentence, crc);
 #endif
 }

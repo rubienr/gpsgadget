@@ -42,6 +42,8 @@ protected:
     bool onGngsa(const String &sentence, uint8_t fields_count);
     bool onGlgsa(const String &sentence, uint8_t fields_count);
 
+    bool onGntxt(const String &sentence, uint8_t fields_count);
+
     bool parseSentence();
 
     //! {@

@@ -49,16 +49,16 @@ struct GXgga {
     float geoid_separation{ std::numeric_limits<float>::quiet_NaN() };
     char geoid_separation_units{ ' ' };
     float age_of_diff_corr_seconds{ std::numeric_limits<float>::quiet_NaN() }; // TODO: what is the correct term?
-    int16_t diff_ref_station_id{ -1 };   // TODO: what is the correct term?
+    int16_t diff_ref_station_id{ -1 }; // TODO: what is the correct term?
 };
 
 // -------------------------------------------------------------------------------------------------
 
 struct GXgll {
-    float latitude{ std::numeric_limits<float>::quiet_NaN() }; // ddmm.mmmm
-    char north_south_indicator{ ' ' }; // N or S
+    float latitude{ std::numeric_limits<float>::quiet_NaN() };  // ddmm.mmmm
+    char north_south_indicator{ ' ' };                          // N or S
     float longitude{ std::numeric_limits<float>::quiet_NaN() }; // ddmm.mmmm
-    char east_west_indicator{ ' ' }; // E or W
+    char east_west_indicator{ ' ' };                            // E or W
     float utc_time_seconds{ std::numeric_limits<float>::quiet_NaN() };
     char status{ ' ' }; // A=data valid, V=data not valid
     char mode{ ' ' };   // NMEA >= v3.0, A=autonomous, D=DGPS, E=DR
@@ -68,17 +68,17 @@ struct GXgll {
 
 struct GXrmc {
     float utc_time_seconds{ std::numeric_limits<float>::quiet_NaN() };
-    char status{ ' ' }; // A=data valid, V=data not valid
-    float latitude{ std::numeric_limits<float>::quiet_NaN() }; // ddmm.mmmm
-    char north_south_indicator{ ' ' }; // N or S
+    char status{ ' ' };                                         // A=data valid, V=data not valid
+    float latitude{ std::numeric_limits<float>::quiet_NaN() };  // ddmm.mmmm
+    char north_south_indicator{ ' ' };                          // N or S
     float longitude{ std::numeric_limits<float>::quiet_NaN() }; // ddmm.mmmm
-    char east_west_indicator{ ' ' }; // E or W
+    char east_west_indicator{ ' ' };                            // E or W
     float speed_over_ground_kts{ std::numeric_limits<float>::quiet_NaN() };
     float course_over_ground_deg{ std::numeric_limits<float>::quiet_NaN() };
     String date{ "" };
-    float magnetic_variation { std::numeric_limits<float>::quiet_NaN() };          //
-    char east_west_indicator_2{ ' ' }; // E
-    char mode{ ' ' };                  // only NMEA >= v2.3, A=autonomous, D=DGPS, E=DR
+    float magnetic_variation{ std::numeric_limits<float>::quiet_NaN() }; //
+    char east_west_indicator_2{ ' ' };                                   // E
+    char mode{ ' ' }; // only NMEA >= v2.3, A=autonomous, D=DGPS, E=DR
 };
 
 // -------------------------------------------------------------------------------------------------
@@ -92,7 +92,7 @@ struct GXvtg {
     char speed_horizontal_kts_unit{ ' ' }; // N
     float speed_horizontal_kmh{ std::numeric_limits<float>::quiet_NaN() };
     char speed_horizontal_kmh_unit{ ' ' }; // K
-    char mode{ ' ' };                     // only NMEA >= 2.3, A=autonomous, D=DGPS, E=DR
+    char mode{ ' ' };                      // only NMEA >= 2.3, A=autonomous, D=DGPS, E=DR
 };
 
 // -------------------------------------------------------------------------------------------------
@@ -119,9 +119,9 @@ struct GXgsa {
     int8_t sat_used_ch_10{ -1 };
     int8_t sat_used_ch_11{ -1 };
     int8_t sat_used_ch_12{ -1 };
-    float pdop{ std::numeric_limits<float>::quiet_NaN()  };
-    float hdop{ std::numeric_limits<float>::quiet_NaN()  };
-    float vdop{ std::numeric_limits<float>::quiet_NaN()  };
+    float pdop{ std::numeric_limits<float>::quiet_NaN() };
+    float hdop{ std::numeric_limits<float>::quiet_NaN() };
+    float vdop{ std::numeric_limits<float>::quiet_NaN() };
 };
 
 // -------------------------------------------------------------------------------------------------
